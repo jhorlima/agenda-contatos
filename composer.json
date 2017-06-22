@@ -1,5 +1,6 @@
 {
   "name": "jhorlima/agenda-contatos",
+  "minimum-stability": "stable",
   "description": "Plugins Agenda de Contatos - Exemplo WP-MocaBonita",
   "version": "1.0.0",
   "license": "MIT",
