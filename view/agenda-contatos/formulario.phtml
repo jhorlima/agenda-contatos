@@ -1,0 +1,76 @@
+<?php
+/**
+ * Verificar se a view|template está sendo carregado a partir do MocaBonita
+ *
+ */
+if (!defined('ABSPATH') || !$this instanceof \MocaBonita\view\MbView) :
+    die("Você não tem permissão para acessar este arquivo!");
+endif;
+
+use AgendaContatos\model\Contato;
+
+/**
+ * Verificar se foi enviado alguma variavel $contatos para a view
+ * Verificar também se ela é array
+ *
+ */
+if (!isset($contato) || !$contato instanceof Contato):
+    $contato = new Contato();
+endif;
+
+?>
+
+<form class="form-horizontal" method="POST">
+    <fieldset>
+
+        <div class="control-group">
+            <label class="control-label" for="nome">Nome do Contato</label>
+            <div class="controls">
+                <input type="text"
+                       id="nome"
+                       name="nome"
+                       value="<?= $contato->nome; ?>"
+                       class="input-xlarge"
+                       required>
+                <p class="help-block">Nome do Contato</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- E-mail -->
+            <label class="control-label" for="email">E-mail</label>
+            <div class="controls">
+                <input type="text"
+                       id="email"
+                       name="email"
+                       class="input-xlarge"
+                       value="<?= $contato->email; ?>"
+                       required>
+                <p class="help-block">E-mail do Contato</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- Password-->
+            <label class="control-label" for="telefone">Telefone</label>
+            <div class="controls">
+                <input type="text"
+                       pattern="^[0-9]{2}-([0-9]{8}|[0-9]{9})"
+                       title="Ex: 99-999999999"
+                       id="telefone"
+                       name="telefone"
+                       class="input-xlarge"
+                       value="<?= $contato->telefone; ?>"
+                       required>
+                <p class="help-block">Ex: 99-999999999</p>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <!-- Button -->
+            <div class="controls">
+                <button class="btn btn-success" type="submit">Salvar</button>
+            </div>
+        </div>
+    </fieldset>
+</form>

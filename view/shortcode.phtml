@@ -1,0 +1,12 @@
+<?php
+/**
+ * Verificar se a view|template está sendo carregado a partir do MocaBonita
+ *
+ */
+if (!defined('ABSPATH') || !$this instanceof \MocaBonita\view\MbView) :
+    die("Você não tem permissão para acessar este arquivo!");
+endif;
+
+echo $this->getContent();
+
+

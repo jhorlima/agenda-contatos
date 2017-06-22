@@ -1,0 +1,43 @@
+<?php
+/**
+ * Verificar se a view|template está sendo carregado a partir do MocaBonita
+ *
+*/
+if (!defined('ABSPATH') || !$this instanceof \MocaBonita\view\MbView) :
+    die("Você não tem permissão para acessar este arquivo!");
+endif;
+
+$nomePagina = $this->getMbRequest()->getMbPage()->getName();
+$nomeAction = $this->getMbRequest()->query('action');
+
+$inicioUrl = $this->getMbRequest()->fullUrlWithNewAction('index');
+$cadastrarUrl = $this->getMbRequest()->fullUrlWithNewAction('cadastrar');
+
+?>
+
+<div class="container-fluid">
+
+    <div class="page-header">
+        <h1><?= $nomePagina; ?></h1>
+
+        <p class="lead"><?= $nomeAction; ?></p>
+
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="<?= !$this->getMbRequest()->isCurrentAction('index') ?: 'active'; ?>">
+                            <a href="<?= $inicioUrl; ?>">Início</a>
+                        </li>
+                        <li class="<?= !$this->getMbRequest()->isCurrentAction('cadastrar') ?: 'active'; ?>">
+                            <a href="<?= $cadastrarUrl; ?>">Cadastrar</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <?= $this->getContent(); ?>
+
+</div>

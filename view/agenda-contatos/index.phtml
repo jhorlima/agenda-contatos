@@ -1,0 +1,71 @@
+<?php
+/**
+ * Verificar se a view|template está sendo carregado a partir do MocaBonita
+ *
+ */
+if (!defined('ABSPATH') || !$this instanceof \MocaBonita\view\MbView) :
+    die("Você não tem permissão para acessar este arquivo!");
+endif;
+
+use Illuminate\Support\Str;
+use Illuminate\Contracts\Support\Arrayable;
+
+/**
+ * Verificar se foi enviado alguma variavel $contatos para a view
+ * Verificar também se ela é array
+ *
+*/
+if (!isset($contatos) || !$contatos instanceof Arrayable):
+    $contatos = [];
+endif;
+
+/**
+ * Verificar se a página atual é shortcode
+*/
+$isShortcode = $this->getMbRequest()->isShortcode();
+
+?>
+
+<table class="table table-striped">
+    <caption>Minha Lista de Contatos</caption>
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Telefone</th>
+        <th>Data de Cadastro</th>
+        <th>Data de Atualização</th>
+        <?php if(!$isShortcode): ?>
+        <th colspan="2">-</th>
+        <?php endif; ?>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($contatos as $contato) : ?>
+        <tr>
+            <th><?= $contato->id; ?></th>
+            <td><?= Str::limit($contato->nome, 30); ?></td>
+            <td><?= $contato->email; ?></td>
+            <td><?= $contato->telefone; ?></td>
+            <!--Início: Objeto Carbon DateTime-->
+            <td><?= $contato->created_at->format('d/m/Y \à\s H:i:s'); ?></td>
+            <td><?= $contato->updated_at->format('d/m/Y \à\s H:i:s'); ?></td>
+            <!--Fim: Objeto Carbon DateTime-->
+            <?php if(!$isShortcode): ?>
+            <td>
+                <a href="<?= $this->getMbRequest()->fullUrlWithNewAction('atualizar', ['id' => $contato->id]); ?>">
+                    Atualizar
+                </a>
+            </td>
+            <td>
+                <a href="<?= $this->getMbRequest()->fullUrlWithNewAction('apagar', ['id' => $contato->id]); ?>"
+                   onclick="return confirm('Deseja realmente apagar?')">
+                    Apagar
+                </a>
+            </td>
+            <?php endif; ?>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>
