@@ -3,6 +3,7 @@
 namespace AgendaContatos\controller;
 
 use AgendaContatos\model\Contato;
+use Illuminate\Database\Eloquent\Collection;
 use MocaBonita\controller\MbController;
 use MocaBonita\tools\MbException;
 use MocaBonita\tools\MbRequest;
@@ -143,5 +144,16 @@ class AgendaContatosController extends MbController
         $this->getMbView()->with("contatos", Contato::all());
 
         return $this->getMbView();
+    }
+
+    /**
+     * Action buscar todos
+     *
+     * @return Collection
+     *
+     */
+    public function buscarTodosAction()
+    {
+        return Contato::all();
     }
 }

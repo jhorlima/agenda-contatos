@@ -3,7 +3,7 @@
  * Plugin Name: Agenda de Contatos
  * Plugin URI: http://exemplo.plugin.com
  * Description: Plugin para gerenciar uma agenda de contatos
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Jhordan Lima
  * Author URI: http://www.github.com/jhorlima
  * License: GLP
@@ -23,6 +23,8 @@ use AgendaContatos\model\Contato;
 use MocaBonita\MocaBonita;
 use MocaBonita\tools\MbPage;
 use MocaBonita\tools\MbPath;
+use MocaBonita\tools\MbRequest;
+use MocaBonita\tools\MbResponse;
 
 /**
  * Impedir que o plugin seja carregado fora do Wordpress
@@ -81,6 +83,43 @@ MocaBonita::plugin(function (MocaBonita $mocabonita) {
     $agendaContatosPagina->addMbAction('atualizar');
 
     $agendaContatosPagina->addMbAction('apagar');
+
+    /**
+     * As actions criadas precisam ter um método na controle em camelCase.
+     *
+     * Ex: buscar-todos => AgendaContatosController@buscarTodosAction
+     *
+     * @doc: https://jhorlima.github.io/wp-mocabonita/classes/MocaBonita.tools.MbAction.html#method___construct
+     */
+    $agendaContatosPagina->addMbAction('buscar-todos')
+        ->setRequiresAjax(true)
+        ->setRequiresMethod('GET')
+        ->setRequiresLogin(false);
+
+    /**
+     * É possivel também definir o conjunto de dados que serão retornados por uma action diretamente de sua configuração,
+     * sem precisar de um método na controller. Contudo é recomendado apenas para dados estáticos.
+     *
+     * @doc: https://jhorlima.github.io/wp-mocabonita/classes/MocaBonita.tools.MbAction.html#method_setData
+     */
+    $agendaContatosPagina->addMbAction('buscar-todos-1')
+        ->setRequiresAjax(true)
+        ->setRequiresMethod('GET')
+        ->setRequiresLogin(false)
+        ->setData(['Fernando', 'Eduardo']);
+
+    /**
+     * Além do conjunto de dados, é possivel adicionar um callback que represta um método da controller. Seu escopo será
+     * uma instancia da controller, logo o $this dentro callback é uma instancia de AgendaContatosController.
+     *
+     * @doc: https://jhorlima.github.io/wp-mocabonita/classes/MocaBonita.tools.MbAction.html#method_setCallback
+     */
+    $agendaContatosPagina->addMbAction('buscar-todos-2')
+        ->setRequiresAjax(true)
+        ->setRequiresMethod('GET')
+        ->setRequiresLogin(false)->setCallback(function (MbRequest $mbRequest, MbResponse $mbResponse){
+            return Contato::all();
+        });
 
     /**
      * É possível também definir assets ao plugin, wordpress ou página, basta obter seu MbAsset.

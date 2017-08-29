@@ -20,12 +20,12 @@ class Contato extends MbModel
 {
     /**
      * Habilitar softdelete para esta model
-    */
+     */
     use SoftDeletes;
 
     /**
      * Atributos do banco que podem ser inseridos em massa
-    */
+     */
     protected $fillable = [
         'nome',
         'email',
@@ -35,7 +35,7 @@ class Contato extends MbModel
 
     /**
      * Atributos do banco que são datas
-    */
+     */
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -69,6 +69,13 @@ class Contato extends MbModel
     {
         $validation = MbValidation::validate($attributes);
 
+        /**
+         * Atribuir automaticamente o id do usuário atual do wordpress ao criar.
+         */
+        if(!$this->exists){
+            Arr::set($attributes, 'wp_user_id', MbWpUser::getCurrentUser()->getKey());
+        }
+
         $validation->setRemoveUnused(true);
         $validation->setValidations("nome", MbStringValidation::getInstance(), [
             'min' => 5,
@@ -101,13 +108,16 @@ class Contato extends MbModel
      * @return Contato
      * @throws \Exception
      */
-    public static function buscarPorId($contatoId){
+    public static function buscarPorId($contatoId)
+    {
 
         $model = new Contato;
 
-        $contato = Contato::where($model->getKeyName(), $contatoId)->where('wp_user_id', get_current_user_id())->first();
+        $contato = Contato::where($model->getKeyName(), $contatoId)
+            ->where('wp_user_id', MbWpUser::getCurrentUser()->getKey())
+            ->first();
 
-        if($contato instanceof Contato){
+        if ($contato instanceof Contato) {
             return $contato;
         } else {
             throw new \Exception("Nenhum contato foi encontrado com este ID.");
@@ -122,7 +132,7 @@ class Contato extends MbModel
      */
     public function cadastrar()
     {
-        $this->setAttribute('wp_user_id',  get_current_user_id());
+        $this->setAttribute('wp_user_id', MbWpUser::getCurrentUser()->getKey());
         $this->save();
 
         return $this;
@@ -136,7 +146,10 @@ class Contato extends MbModel
      */
     public function atualizar(array $dados)
     {
-        //Evitar que o wp_user_id seja atualizado
+        /**
+         * Evitar que o wp_user_id seja atualizado
+         *
+         */
         Arr::set($dados, 'wp_user_id', $this->getAttribute('wp_user_id'));
         $this->update($dados);
 
