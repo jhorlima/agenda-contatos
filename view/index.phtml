@@ -10,8 +10,8 @@ endif;
 $nomePagina = $this->getMbRequest()->getMbPage()->getName();
 $nomeAction = $this->getMbRequest()->query('action');
 
-$inicioUrl = $this->getMbRequest()->fullUrlWithNewAction('index');
-$cadastrarUrl = $this->getMbRequest()->fullUrlWithNewAction('cadastrar');
+$inicioUrl = $this->getMbRequest()->urlAction('index');
+$cadastrarUrl = $this->getMbRequest()->urlAction('cadastrar');
 
 ?>
 

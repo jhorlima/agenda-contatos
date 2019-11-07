@@ -14,6 +14,8 @@ use AgendaContatos\model\Contato;
  * Verificar também se ela é array
  *
  */
+$contato = $this->contato;
+
 if (!isset($contato) || !$contato instanceof Contato):
     $contato = new Contato();
 endif;

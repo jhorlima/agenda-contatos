@@ -15,6 +15,9 @@ use Illuminate\Contracts\Support\Arrayable;
  * Verificar também se ela é array
  *
 */
+
+$contatos = $this->contatos;
+
 if (!isset($contatos) || !$contatos instanceof Arrayable):
     $contatos = [];
 endif;
@@ -54,12 +57,12 @@ $isShortcode = $this->getMbRequest()->isShortcode();
             <!--Fim: Objeto Carbon DateTime-->
             <?php if(!$isShortcode): ?>
             <td>
-                <a href="<?= $this->getMbRequest()->fullUrlWithNewAction('atualizar', ['id' => $contato->id]); ?>">
+                <a href="<?= $this->getMbRequest()->urlAction('atualizar', ['id' => $contato->id]); ?>">
                     Atualizar
                 </a>
             </td>
             <td>
-                <a href="<?= $this->getMbRequest()->fullUrlWithNewAction('apagar', ['id' => $contato->id]); ?>"
+                <a href="<?= $this->getMbRequest()->urlAction('apagar', ['id' => $contato->id]); ?>"
                    onclick="return confirm('Deseja realmente apagar?')">
                     Apagar
                 </a>

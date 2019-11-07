@@ -56,16 +56,13 @@ class AgendaContatosController extends MbController
 
             if ($mbRequest->isMethod('POST')) {
                 $contato->cadastrar();
-                $mbResponse->redirect($mbRequest->fullUrlWithNewAction('index'));
+                $mbResponse->redirect($mbRequest->urlAction('index'));
             }
 
-            return $this->getMbView();
-
-        } catch (MbException $e) {
-            $e->setExceptionData($this->getMbView());
-            throw $e;
         } catch (\Exception $e) {
-            throw new MbException($e->getMessage(), 400, $this->getMbView());
+            MbException::registerError($e);
+        } finally {
+            return $this->getMbView();
         }
     }
 
@@ -99,18 +96,14 @@ class AgendaContatosController extends MbController
 
             if ($mbRequest->isMethod('POST')) {
                 $contato->atualizar($dadosPost);
-                $mbResponse->redirect($mbRequest->fullUrlWithNewAction('index'));
+                $mbResponse->redirect($mbRequest->urlAction('index'));
             }
 
+        }  catch (\Exception $e) {
+            MbException::registerError($e);
+            $contato->fill($dadosPost);
+        } finally {
             return $this->getMbView();
-
-         } catch (MbException $e) {
-            $contato->fill($dadosPost);
-            $e->setExceptionData($this->getMbView());
-            throw $e;
-        } catch (\Exception $e) {
-            $contato->fill($dadosPost);
-            throw new MbException($e->getMessage(), 400, $this->getMbView());
         }
     }
 
@@ -123,7 +116,7 @@ class AgendaContatosController extends MbController
     {
         $contato = new Contato();
         $contato->apagar($mbRequest->query('id'));
-        $this->getMbResponse()->redirect($mbRequest->fullUrlWithNewAction('index'));
+        $this->getMbResponse()->redirect($mbRequest->urlAction('index'));
     }
 
     /**
